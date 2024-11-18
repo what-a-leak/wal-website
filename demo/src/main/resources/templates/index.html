@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphique des Données</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Graphique des données</h1>
+    <canvas id="vibrationChart" width="400" height="200"></canvas>
+    <button onclick="window.location.href='/home';">accueil</button>
+    <script>
+        // Récupération des données via Thymeleaf
+        const data = /*[[${data}]]*/ [];
+        console.log('Données Thymeleaf :', data);
+
+        
+        // Extraction des données pour le graphique
+        const vibrations = data.map(d => d.vibration);
+        const value1 = data.map(d => d.value1);
+        const value2 = data.map(d => d.value2);
+        const value3 = data.map(d => d.value3);
+
+        // Création du graphique
+        const ctx = document.getElementById('vibrationChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: vibrations,
+                datasets: [
+                    {
+                        label: 'Value 1',
+                        borderColor: 'red',
+                        data: value1,
+                        fill: false,
+                    },
+                    {
+                        label: 'Value 2',
+                        borderColor: 'green',
+                        data: value2,
+                        fill: false,
+                    },
+                    {
+                        label: 'Value 3',
+                        borderColor: 'blue',
+                        data: value3,
+                        fill: false,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: 'Vibration' } },
+                    y: { title: { display: true, text: 'Value' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

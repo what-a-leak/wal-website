@@ -1,0 +1,21 @@
+[
+    {
+      "vibration": 1,
+      "value1": 23,
+      "value2": 45,
+      "value3": 67
+    },
+    {
+      "vibration": 2,
+      "value1": 25,
+      "value2": 47,
+      "value3": 69
+    },
+    {
+      "vibration": 3,
+      "value1": 27,
+      "value2": 49,
+      "value3": 71
+    }
+  ]
+  

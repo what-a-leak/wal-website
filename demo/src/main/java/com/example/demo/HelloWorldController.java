@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HelloWorldController {
 
-    @GetMapping("/")
-    public String hello(Model model) {
-        model.addAttribute("message", "Hello, World!"); // Ajoute "Hello, World!" au modèle
-        return "hello"; // Renvoie vers le template nommé "hello.html"
+    // Page d'accueil après connexion réussie
+    @GetMapping("/home")
+    public String homePage(Model model) {
+        model.addAttribute("message", "Bienvenue sur What a Leak!");
+        return "hello";  // Renvoie vers hello.html
     }
 }

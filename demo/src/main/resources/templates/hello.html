@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Hello Page</title>
+    <title>Page d'accueil</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
-    <h1 th:text="${message}">Hello, World!</h1>
+    <img src="/images/what-a-leak.png" alt="Image en haut à droite" class="header-image">
+    
+    <h1 th:text="${message}">Bienvenue sur What a Leak!</h1>
+
+    <button onclick="window.location.href='/data';">Voir les graphiques</button>
+
+    <!-- Bouton de déconnexion -->
+    <button onclick="window.location.href='/';">Déconnexion</button>
 </body>
 </html>

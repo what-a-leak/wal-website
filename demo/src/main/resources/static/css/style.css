@@ -1,0 +1,47 @@
+/* src/main/resources/static/css/style.css */
+
+/* Applique un fond violet sur toute la page */
+body {
+    background-color: #cfc4e7; /* Couleur violet (code hexadécimal) */
+    margin: 0; /* Supprime la marge par défaut du navigateur */
+    padding: 0; /* Supprime le padding par défaut du navigateur */
+    height: 100vh; /* Assure que le fond couvre toute la hauteur de la page */
+}
+
+/* Style de l'image en haut à droite */
+.header-image {
+    position: fixed; /* Fixe la position de l'image en haut à droite */
+    top: 10px; /* Décalage de 10px depuis le haut */
+    right: 10px; /* Décalage de 10px depuis la droite */
+    width: 100px; /* Ajuste la largeur de l'image */
+    height: auto; /* Garde les proportions de l'image */
+    z-index: 1000; /* Place l'image au-dessus du contenu */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin: auto;
+}
+
+label, input, button {
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+p {
+    color: red;
+    text-align: center;
+}
