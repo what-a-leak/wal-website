@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accelerometer data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Accelerometer data</h1>
+
+    <!-- Canvas pour les graphiques -->
+    <canvas id="accelerometerChart" width="800" height="400"></canvas>
+
+    <!-- Lien pour revenir à la page d'accueil -->
+    <button onclick="window.location.href='/home';">home </button>
+
+    <script>
+        // Récupérer les données des accéléromètres depuis le fichier JSON
+        fetch('/data.json')
+            .then(response => response.json())
+            .then(data => {
+                // Extraire les timestamps pour l'axe X (horizontal)
+                const timestamps = data.accelerometer_1.map(item => item.timestamp);
+
+                // Extraire les données des accéléromètres (X, Y, Z)
+                const acc1_x = data.accelerometer_1.map(item => item.x);
+                const acc1_y = data.accelerometer_1.map(item => item.y);
+                const acc1_z = data.accelerometer_1.map(item => item.z);
+
+                const acc2_x = data.accelerometer_2.map(item => item.x);
+                const acc2_y = data.accelerometer_2.map(item => item.y);
+                const acc2_z = data.accelerometer_2.map(item => item.z);
+
+                // Créer le graphique avec Chart.js
+                const ctx = document.getElementById('accelerometerChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line', // Choisir le type de graphique (ligne)
+                    data: {
+                        labels: timestamps, // Utiliser les timestamps pour l'axe des X
+                        datasets: [
+                            {
+                                label: 'Accelerometer 1 - Axe X',
+                                data: acc1_x,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                fill: false, // Ne pas remplir sous la courbe
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Accelerometer 1 - Axe Y',
+                                data: acc1_y,
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                fill: false,
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Accelerometer 1 - Axe Z',
+                                data: acc1_z,
+                                borderColor: 'rgba(255, 159, 64, 1)',
+                                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                                fill: false,
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Accelerometer 2 - Axe X',
+                                data: acc2_x,
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                fill: false,
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Accelerometer 2 - Axe Y',
+                                data: acc2_y,
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                fill: false,
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Accelerometer 2 - Axe Z',
+                                data: acc2_z,
+                                borderColor: 'rgba(255, 159, 64, 1)',
+                                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                                fill: false,
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Timestamp'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Accelerometer value'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Erreur:', error));
+    </script>
+</body>
+</html>
