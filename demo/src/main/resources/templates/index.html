@@ -3,17 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accelerometer data</title>
+    <title>Accelerometer Data</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #6a0dad; /* Fond violet */
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Conteneur du graphique avec fond blanc */
+        .chart-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            margin-top: 20px;
+        }
+
+        canvas {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #4caf50;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            background-color: #3e8e41;
+        }
+    </style>
 </head>
 <body>
-    <h1>Accelerometer data</h1>
+    <h1>Accelerometer Data</h1>
 
-    <!-- Canvas pour les graphiques -->
-    <canvas id="accelerometerChart" width="800" height="400"></canvas>
+    <!-- Conteneur du graphique -->
+    <div class="chart-container">
+        <!-- Canvas pour les graphiques -->
+        <canvas id="accelerometerChart" width="800" height="400"></canvas>
+    </div>
 
-    <!-- Lien pour revenir à la page d'accueil -->
-    <button onclick="window.location.href='/home';">home </button>
+    <!-- Bouton pour revenir à la page d'accueil -->
+    <div class="button-container">
+        <button onclick="window.location.href='/home';">Home</button>
+    </div>
 
     <script>
         // Récupérer les données des accéléromètres depuis le fichier JSON
@@ -35,12 +99,12 @@
                 // Créer le graphique avec Chart.js
                 const ctx = document.getElementById('accelerometerChart').getContext('2d');
                 new Chart(ctx, {
-                    type: 'line', // Choisir le type de graphique (ligne)
+                    type: 'line', // Type de graphique : courbe
                     data: {
-                        labels: timestamps, // Utiliser les timestamps pour l'axe des X
+                        labels: timestamps, // Utiliser les timestamps pour l'axe X
                         datasets: [
                             {
-                                label: 'Accelerometer 1 - Axe X',
+                                label: 'Accelerometer 1 - X Axis',
                                 data: acc1_x,
                                 borderColor: 'rgba(75, 192, 192, 1)',
                                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -48,7 +112,7 @@
                                 borderWidth: 1
                             },
                             {
-                                label: 'Accelerometer 1 - Axe Y',
+                                label: 'Accelerometer 1 - Y Axis',
                                 data: acc1_y,
                                 borderColor: 'rgba(54, 162, 235, 1)',
                                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -56,7 +120,7 @@
                                 borderWidth: 1
                             },
                             {
-                                label: 'Accelerometer 1 - Axe Z',
+                                label: 'Accelerometer 1 - Z Axis',
                                 data: acc1_z,
                                 borderColor: 'rgba(255, 159, 64, 1)',
                                 backgroundColor: 'rgba(255, 159, 64, 0.2)',
@@ -64,7 +128,7 @@
                                 borderWidth: 1
                             },
                             {
-                                label: 'Accelerometer 2 - Axe X',
+                                label: 'Accelerometer 2 - X Axis',
                                 data: acc2_x,
                                 borderColor: 'rgba(255, 99, 132, 1)',
                                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -72,7 +136,7 @@
                                 borderWidth: 1
                             },
                             {
-                                label: 'Accelerometer 2 - Axe Y',
+                                label: 'Accelerometer 2 - Y Axis',
                                 data: acc2_y,
                                 borderColor: 'rgba(153, 102, 255, 1)',
                                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
@@ -80,7 +144,7 @@
                                 borderWidth: 1
                             },
                             {
-                                label: 'Accelerometer 2 - Axe Z',
+                                label: 'Accelerometer 2 - Z Axis',
                                 data: acc2_z,
                                 borderColor: 'rgba(255, 159, 64, 1)',
                                 backgroundColor: 'rgba(255, 159, 64, 0.2)',

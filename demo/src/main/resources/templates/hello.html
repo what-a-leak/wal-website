@@ -1,30 +1,85 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page d'accueil</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #6a0dad; /* Fond violet */
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .header-image {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            max-width: 100px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #4caf50;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            background-color: #3e8e41;
+        }
+    </style>
 </head>
 <body>
     <img src="/images/what-a-leak.png" alt="Image en haut à droite" class="header-image">
     
     <h1 th:text="${message}">Welcome on What a Leak!</h1>
 
-    <button onclick="window.location.href='/index';">See leak detection chart </button>
+    <div class="button-container">
+        <button onclick="window.location.href='/index';">See leak detection chart</button>
+        <button onclick="logout()">Log out</button>
+    </div>
 
-
-    <!-- Bouton de déconnexion -->
-    <button onclick="window.location.href='/logout';">Log out</button>
-    
     <script>
-    function logout() {
-        fetch('/api/logout', { method: 'POST' })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data); // Affiche "Session cleared"
-                window.location.href = '/'; // Redirige vers la page de connexion
-            });
-    }
+        function logout() {
+            fetch('/api/logout', { method: 'POST' })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // Affiche "Session cleared"
+                    window.location.href = '/'; // Redirige vers la page de connexion
+                });
+        }
     </script>
-
 </body>
 </html>
