@@ -6,24 +6,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+
 @Controller
 @SessionAttributes("user")
-public class HelloWorldController {
+public class DataController {
 
-    // Page d'accueil après connexion réussie
-    @GetMapping("/home") 
-    public String homePage(@ModelAttribute("user") User user, Model model) {
+@GetMapping("/index")  // When user tries to access /index.html
+public String DataPage(@ModelAttribute("user") User user, Model model) {
+        // Check if the user is in the session (i.e., logged in)
         if (user == null) {
-            return "redirect:/";  // Si l'utilisateur n'est pas dans la session, redirige vers la page de connexion
+            // If the session is complete, the user is logged out
+            return "redirect:/";  // Redirect to login page or home page
         }
         if (CredentialService.isValidUser(user.getUsername(), user.getPassword())){
-             // No need to revalidate credentials here; assume the user is logged in
-            model.addAttribute("message", "Welcome " + user.getUsername() + " on What a Leak!");
-            return "hello";
+            // If user is logged in, proceed to show the page
+            return "index.html";  // This should point to your index.html or a corresponding view
         }
         System.out.println("Nom d'utilisateur: " + user.getUsername());
         System.out.println("Nom d'utilisateur: " + user.getPassword());
-
         return "redirect:/";
+       
+        
     }
 }
