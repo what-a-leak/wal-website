@@ -16,7 +16,7 @@ public String DataPage(@ModelAttribute("user") User user, Model model) {
         // Check if the user is in the session (i.e., logged in)
         if (user == null) {
             // If the session is complete, the user is logged out
-            return "redirect:/";  // Redirect to login page or home page
+            return "redirect:/logout";  // Redirect to login page or home page
         }
         if (CredentialService.isValidUser(user.getUsername(), user.getPassword())){
             // If user is logged in, proceed to show the page
@@ -24,7 +24,7 @@ public String DataPage(@ModelAttribute("user") User user, Model model) {
         }
         System.out.println("Nom d'utilisateur: " + user.getUsername());
         System.out.println("Nom d'utilisateur: " + user.getPassword());
-        return "redirect:/";
+        return "redirect:/logout";
        
         
     }
