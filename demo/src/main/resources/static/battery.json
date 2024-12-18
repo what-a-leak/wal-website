@@ -1,0 +1,6 @@
+[
+    { "node_id": 1, "battery_level": 128 },
+    { "node_id": 2, "battery_level": 64 },
+    { "node_id": 3, "battery_level": 256 },
+    { "node_id": 4, "battery_level": 0 }
+]

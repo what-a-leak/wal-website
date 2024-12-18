@@ -59,21 +59,85 @@
         button:active {
             background-color: #3e8e41;
         }
+
+        /* Style pour les messages d'urgence */
+        .emergency {
+            background-color: #ff4c4c;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        /* Style pour le message "Pas de fuite" */
+        .no-leak {
+            background-color: #4caf50;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        /* Cache les messages par défaut */
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <img src="/images/what-a-leak.png" alt="Image en haut à droite" class="header-image">
     
+    <div id="leak-alert" class="emergency hidden">
+        🚨 Emergency: A leak has been detected on the following node(s): <span id="leak-nodes"></span> 🚨
+    </div>
+
+    <div id="no-leak-alert" class="no-leak hidden">
+        ✅ No problems detected. No leaks detected! ✅
+    </div>
+    
     <h1 th:text="${message}">Welcome on What a Leak!</h1>
 
     <div class="button-container">
         <button onclick="window.location.href='/index';">See leak detection chart</button>
+        <button onclick="window.location.href='/battery';">See battery level</button>
         <button onclick="window.location.href='/team';">Our team and the project</button>
         <button onclick="logout()">Log out</button>
-        
     </div>
 
     <script>
+        // Fonction pour vérifier les fuites dans le fichier JSON
+        async function checkForLeaks() {
+            try {
+                const response = await fetch('/leak.json'); // Remplace par le chemin correct
+                if (!response.ok) {
+                    throw new Error('Échec de la récupération des données de fuite');
+                }
+                const leakData = await response.json();
+
+                // Filtrer les nœuds avec une fuite
+                const leakNodes = leakData.filter(node => node.leak === 1);
+
+                if (leakNodes.length > 0) {
+                    // S'il y a des fuites, afficher les nœuds concernés
+                    const leakAlert = document.getElementById('leak-alert');
+                    const leakNodesElement = document.getElementById('leak-nodes');
+                    leakNodesElement.textContent = leakNodes.map(node => `${node.node_id}`).join(', ');
+                    leakAlert.classList.remove('hidden');
+                } else {
+                    // S'il n'y a pas de fuites, afficher le message "Pas de fuite"
+                    const noLeakAlert = document.getElementById('no-leak-alert');
+                    noLeakAlert.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la vérification des fuites:', error);
+            }
+        }
+
+        // Fonction de déconnexion
         function logout() {
             fetch('/api/logout', { method: 'POST' })
                 .then(response => response.text())
@@ -82,6 +146,9 @@
                     window.location.href = '/logout'; // Redirige vers la page de connexion
                 });
         }
+
+        // Appelle la vérification des fuites au chargement de la page
+        checkForLeaks();
     </script>
 </body>
 </html>
