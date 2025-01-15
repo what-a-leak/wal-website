@@ -113,7 +113,7 @@
     <script>
         async function loadBatteryData() {
             try {
-                const response = await fetch('/data.json'); // Chemin vers votre fichier JSON
+                const response = await fetch('/home/wal/wal-database-process/data.json'); // Chemin vers votre fichier JSON
                 if (!response.ok) {
                     throw new Error('Échec de la récupération des données');
                 }

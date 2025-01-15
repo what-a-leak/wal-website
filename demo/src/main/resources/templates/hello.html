@@ -115,7 +115,7 @@
         // Fonction pour vérifier les fuites dans le fichier JSON
         async function checkForLeaks() {
             try {
-                const response = await fetch('/data.json'); // Remplace par le chemin correct
+                const response = await fetch('/home/wal/wal-database-process/data.json'); // Remplace par le chemin correct
                 if (!response.ok) {
                     throw new Error('Échec de la récupération des données de fuite');
                 }
