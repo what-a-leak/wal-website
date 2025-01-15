@@ -11,14 +11,14 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Assurer que les éléments commencent en haut */
+            justify-content: flex-start;
             align-items: center;
             height: 100%;
-            background-color: #6a0dad; /* Fond violet */
+            background-color: #6a0dad;
             color: white;
             font-family: Arial, sans-serif;
-            overflow-y: auto; /* Permet le défilement */
-            padding-top: 40px; /* Espacement pour que le titre soit visible */
+            overflow-y: auto;
+            padding-top: 40px;
         }
 
         h1 {
@@ -28,23 +28,21 @@
             padding: 10px;
         }
 
-        /* Conteneur pour les graphiques avec fond blanc */
         .chart-container {
             background-color: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 90%;   /* Prend 90% de la largeur de l'écran */
+            width: 90%;
             margin-top: 20px;
-            margin-bottom: 40px; /* Marge inférieure pour espacer les graphiques */
-            height: 500px;  /* Hauteur fixe pour chaque conteneur */
-            overflow: hidden; /* Cache le débordement des graphiques */
+            margin-bottom: 40px;
+            height: 500px;
+            overflow: hidden;
         }
 
-        /* Taille dynamique du canvas, s'adapte au conteneur */
         canvas {
-            width: 100% !important;  /* Le canvas prend toute la largeur du conteneur */
-            height: 100% !important; /* Le canvas prend toute la hauteur du conteneur */
+            width: 100% !important;
+            height: 100% !important;
         }
 
         .button-container {
@@ -55,7 +53,7 @@
             padding: 15px;
             font-size: 1.2em;
             color: white;
-            background-color: #4caf50;
+            background-color: #28439f;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -63,46 +61,40 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #28439f;
             transform: scale(1.05);
         }
 
         button:active {
-            background-color: #3e8e41;
+            background-color: #28439f;
         }
     </style>
 </head>
 <body>
-    <h1>Graphiques des Données</h1>
+    <h1>Data</h1>
 
-    <!-- Conteneur pour les graphiques -->
-    <div id="charts-container">
-        <!-- Les graphiques seront insérés ici -->
-    </div>
+    <div id="charts-container"></div>
 
-    <!-- Bouton pour revenir à la page d'accueil -->
     <div class="button-container">
         <button onclick="window.location.href='/home';">Home</button>
     </div>
 
     <script>
-        // Fonction pour charger les données JSON depuis un fichier
         async function loadData() {
             try {
-                const response = await fetch('/data.json'); // Remplace par le chemin de ton fichier JSON
+                const response = await fetch('/data.json'); // Chemin vers votre fichier JSON
                 if (!response.ok) {
                     throw new Error('Échec de la récupération des données');
                 }
-                const data = await response.json(); // Parse les données JSON
-                
-                // Vérification du type de 'data'
+                const data = await response.json();
+
+                // Vérification des données
                 console.log('Données récupérées:', data);
 
-                // Accès aux données sous data.Data
-                if (Array.isArray(data.Data)) {
-                    processData(data.Data, data.Nodes); // Traite les données si elles sont sous forme de tableau
+                if (Array.isArray(data)) {
+                    processData(data); // Traite les données si elles sont sous forme de tableau
                 } else {
-                    console.error('Erreur: Les données sous "Data" ne sont pas un tableau');
+                    console.error('Erreur: Les données ne sont pas un tableau');
                 }
 
             } catch (error) {
@@ -110,13 +102,12 @@
             }
         }
 
-        // Fonction pour organiser les données par node_id et générer des graphiques
-        function processData(data, nodes) {
+        function processData(data) {
             const nodesData = {};
 
-            // Vérifie si les données sont sous forme de tableau
+            // Organiser les données par NodeID
             data.forEach(item => {
-                const nodeId = item.node_id;
+                const nodeId = item.NodeID;
                 if (!nodesData[nodeId]) {
                     nodesData[nodeId] = {
                         labels: [],
@@ -124,32 +115,30 @@
                     };
                 }
 
-                // Formater le timestamp en une chaîne lisible
-                const formattedTimestamp = formatTimestamp(item.timestamp);
+                // Formater le timestamp
+                const formattedTimestamp = formatTimestamp(item.TimeStamp);
                 nodesData[nodeId].labels.push(formattedTimestamp);
-                nodesData[nodeId].values.push(item.value);
+
+                // Ajouter les mesures capteur
+                nodesData[nodeId].values.push(item.MesureCapteur);
             });
 
-            // Générer un graphique pour chaque node_id
-            Object.keys(nodesData).forEach(node_id => {
-                generateChart(node_id, nodesData[node_id].labels, nodesData[node_id].values);
+            // Générer les graphiques pour chaque nœud
+            Object.keys(nodesData).forEach(nodeId => {
+                generateChart(nodeId, nodesData[nodeId].labels, nodesData[nodeId].values);
             });
         }
 
-        // Fonction pour formater le timestamp en une chaîne de date lisible
         function formatTimestamp(timestamp) {
             const date = new Date(timestamp);
-            return date.toISOString().slice(0, 19).replace("T", " "); // Format: "YYYY-MM-DD HH:MM:SS"
+            return date.toISOString().slice(0, 19).replace('T', ' '); // Format: "YYYY-MM-DD HH:MM:SS"
         }
 
-        // Fonction pour générer un graphique pour chaque node_id
-        function generateChart(node_id, labels, values) {
-            // Créer un conteneur div pour chaque graphique
+        function generateChart(nodeId, labels, values) {
             const chartContainer = document.createElement('div');
-            chartContainer.classList.add('chart-container');  // Applique les styles du conteneur
+            chartContainer.classList.add('chart-container');
             document.getElementById('charts-container').appendChild(chartContainer);
 
-            // Créer le canvas dans ce conteneur
             const canvas = document.createElement('canvas');
             chartContainer.appendChild(canvas);
 
@@ -158,7 +147,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `Node ${node_id}`,
+                        label: `Node ${nodeId}`,
                         data: values,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -172,13 +161,13 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Temps'
+                                text: 'Time'
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: 'Valeur'
+                                text: 'Sensor&#39;s Measure'
                             }
                         }
                     }
@@ -186,7 +175,6 @@
             });
         }
 
-        // Charger les données au chargement de la page
         loadData();
     </script>
 </body>

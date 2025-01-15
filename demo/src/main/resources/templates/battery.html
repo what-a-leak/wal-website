@@ -31,6 +31,7 @@
             gap: 15px;
             width: 90%;
             max-width: 800px;
+            overflow-y: auto;
         }
 
         .battery-level {
@@ -65,7 +66,7 @@
         }
 
         .progress.high {
-            background-color: #4caf50; /* Vert pour élevé */
+            background-color: #45a049; /* Vert pour élevé */
         }
 
         .battery-label {
@@ -81,7 +82,7 @@
             padding: 15px;
             font-size: 1.2em;
             color: white;
-            background-color: #4caf50;
+            background-color: #28439f;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -89,12 +90,12 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #28439f;
             transform: scale(1.05);
         }
 
         button:active {
-            background-color: #3e8e41;
+            background-color: #28439f;
         }
     </style>
 </head>
@@ -102,7 +103,7 @@
     <h1>Battery Level</h1>
 
     <div class="battery-container" id="battery-container">
-        <!-- Les Battery Level seront insérés ici -->
+        <!-- Les niveaux de batterie des nœuds seront affichés ici -->
     </div>
 
     <div class="button-container">
@@ -110,36 +111,46 @@
     </div>
 
     <script>
-        // Fonction pour charger les données JSON depuis un fichier
         async function loadBatteryData() {
             try {
-                const response = await fetch('/battery.json'); // Remplace par le chemin de ton fichier JSON
+                const response = await fetch('/data.json'); // Chemin vers votre fichier JSON
                 if (!response.ok) {
                     throw new Error('Échec de la récupération des données');
                 }
-                const batteryData = await response.json(); // Parse les données JSON
-                
-                // Vérification des données
-                console.log('Données de batterie récupérées:', batteryData);
+                const batteryData = await response.json();
 
-                // Traite les données pour chaque nœud
                 if (Array.isArray(batteryData)) {
-                    displayBatteryLevels(batteryData);
-                } else {
-                    console.error('Erreur: Les données de batterie ne sont pas un tableau');
-                }
+                    // Regroupez les données par NodeID et sélectionnez le dernier TimeStamp pour chaque nœud
+                    const latestDataByNode = groupByNode(batteryData);
 
+                    // Affichez les niveaux de batterie pour tous les nœuds
+                    displayBatteryLevels(latestDataByNode);
+                } else {
+                    console.error('Erreur : Les données récupérées ne sont pas un tableau.');
+                }
             } catch (error) {
-                console.error('Erreur:', error);
+                console.error('Erreur lors du chargement des données JSON :', error);
             }
         }
 
-        // Fonction pour afficher les Battery Level
+        // Fonction pour regrouper les données par NodeID et obtenir le dernier TimeStamp pour chaque nœud
+        function groupByNode(data) {
+            const grouped = {};
+            data.forEach(node => {
+                const nodeId = node.NodeID;
+                const timeStamp = new Date(node.TimeStamp);
+                if (!grouped[nodeId] || timeStamp > new Date(grouped[nodeId].TimeStamp)) {
+                    grouped[nodeId] = node; // Conservez uniquement la donnée la plus récente
+                }
+            });
+            return Object.values(grouped); // Retourne les données les plus récentes pour chaque nœud
+        }
+
         function displayBatteryLevels(batteryData) {
             const container = document.getElementById('battery-container');
 
             batteryData.forEach(node => {
-                const batteryPercentage = Math.round((node.battery_level / 256) * 100);
+                const batteryPercentage = parseInt(node.Batterie);
 
                 // Crée un conteneur pour chaque nœud
                 const batteryLevelDiv = document.createElement('div');
@@ -148,7 +159,7 @@
                 // Ajoute une étiquette avec le numéro du nœud et le pourcentage
                 const label = document.createElement('div');
                 label.classList.add('battery-label');
-                label.textContent = `Node ${node.node_id}: ${batteryPercentage}%`;
+                label.textContent = `Node ${node.NodeID}: ${batteryPercentage}%`;
                 batteryLevelDiv.appendChild(label);
 
                 // Ajoute une barre de progression
@@ -175,7 +186,7 @@
             });
         }
 
-        // Charger les données au chargement de la page
+        // Charger les données JSON au chargement de la page
         loadBatteryData();
     </script>
 </body>

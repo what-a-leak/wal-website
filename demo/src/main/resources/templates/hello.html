@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,8 @@
             align-items: center;
             flex-direction: column;
             height: 100vh;
-            background-color: #6a0dad; /* Fond violet */
+            background-color: #6a0dad;
+            /* Fond violet */
             color: white;
             font-family: Arial, sans-serif;
         }
@@ -88,17 +90,18 @@
         }
     </style>
 </head>
+
 <body>
     <img src="/images/what-a-leak.png" alt="Image en haut à droite" class="header-image">
-    
-    <div id="leak-alert" class="emergency hidden">
+
+    <div id="leak-alert" class="hidden">
         🚨 Emergency: A leak has been detected on the following node(s): <span id="leak-nodes"></span> 🚨
     </div>
-
-    <div id="no-leak-alert" class="no-leak hidden">
+    <div id="no-leak-alert" class="hidden">
         ✅ No problems detected. No leaks detected! ✅
     </div>
     
+
     <h1 th:text="${message}">Welcome on What a Leak!</h1>
 
     <div class="button-container">
@@ -112,20 +115,23 @@
         // Fonction pour vérifier les fuites dans le fichier JSON
         async function checkForLeaks() {
             try {
-                const response = await fetch('/leak.json'); // Remplace par le chemin correct
+                const response = await fetch('/data.json'); // Remplace par le chemin correct
                 if (!response.ok) {
                     throw new Error('Échec de la récupération des données de fuite');
                 }
                 const leakData = await response.json();
 
+                // Regroupez les données par NodeID et sélectionnez le dernier TimeStamp pour chaque nœud
+                const latestDataByNode = groupByNode(leakData);
+
                 // Filtrer les nœuds avec une fuite
-                const leakNodes = leakData.filter(node => node.leak === 1);
+                const leakNodes = latestDataByNode.filter(node => node.Status === 1);
 
                 if (leakNodes.length > 0) {
                     // S'il y a des fuites, afficher les nœuds concernés
                     const leakAlert = document.getElementById('leak-alert');
                     const leakNodesElement = document.getElementById('leak-nodes');
-                    leakNodesElement.textContent = leakNodes.map(node => `${node.node_id}`).join(', ');
+                    leakNodesElement.textContent = leakNodes.map(node => `${node.NodeID}`).join(', ');
                     leakAlert.classList.remove('hidden');
                 } else {
                     // S'il n'y a pas de fuites, afficher le message "Pas de fuite"
@@ -136,6 +142,20 @@
                 console.error('Erreur lors de la vérification des fuites:', error);
             }
         }
+
+        // Fonction pour regrouper les données par NodeID et obtenir le dernier TimeStamp
+        function groupByNode(data) {
+            const grouped = {};
+            data.forEach(node => {
+                const nodeId = node.NodeID;
+                const timeStamp = new Date(node.TimeStamp);
+                if (!grouped[nodeId] || timeStamp > new Date(grouped[nodeId].TimeStamp)) {
+                    grouped[nodeId] = node; // Conserver uniquement la donnée la plus récente
+                }
+            });
+            return Object.values(grouped); // Retourne les données les plus récentes pour chaque nœud
+        }
+
 
         // Fonction de déconnexion
         function logout() {
@@ -151,4 +171,5 @@
         checkForLeaks();
     </script>
 </body>
+
 </html>
