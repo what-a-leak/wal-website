@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CredentialService {
 
-    private static final String CREDENTIALS_FILE = "/Users/cyril/INSA/wal-website/demo/src/main/resources/credentials.json";
+    private static final String CREDENTIALS_FILE = "/home/wal/wal-website/demo/src/main/resources/credentials.json";
 
     public static List<User> loadUsers() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
